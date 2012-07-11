@@ -4,3 +4,8 @@ obj
 
 # mstest test results
 TestResults
+
+
+# NuGet packages
+src/Packages/
+!src/Packages/repositories.config

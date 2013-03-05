@@ -26,8 +26,6 @@ namespace publisher
             bool running = true;
             while (running)
             {
-                if (!Console.KeyAvailable) continue;
-
                 ConsoleKeyInfo keypress = Console.ReadKey(true);
                 switch (keypress.Key)
                 {

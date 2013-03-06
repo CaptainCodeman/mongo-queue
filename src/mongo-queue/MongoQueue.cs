@@ -12,14 +12,16 @@ namespace SimpleQueue
         private static ILog Log = LogManager.GetCurrentClassLogger();
 
         private readonly MongoDatabase _database;
-        private readonly MongoCollection<BsonDocument> _position;   // used to record the current position
-        private readonly IMongoQuery _positionQuery;
+        //private readonly MongoCollection<BsonDocument> _position;   // used to record the current position
+        //private readonly IMongoQuery _positionQuery;
         private readonly MongoCollection<MongoMessage<T>> _queue;   // the collection for the messages
         private readonly string _queueName = typeof(T).Name;        // name of collection (based on type name)
 
         private MongoCursorEnumerator<MongoMessage<T>> _enumerator; // our cursor enumerator
         private ObjectId _lastId = ObjectId.Empty;                  // the last _id read from the queue
         private bool _startedReading;                               // initial query on an empty collection is a special case
+
+        private readonly DateTime _started = DateTime.UtcNow;
 
         public MongoQueue(string connectionString, long queueSize)
         {
@@ -38,6 +40,7 @@ namespace SimpleQueue
                         .SetMaxSize(queueSize); // limit the size of the collection and pre-allocated the space to this number of bytes
 
                     _database.CreateCollection(_queueName, options);
+                    _database.GetCollection(_queueName).Save(new NOOPMessage()); // 'start' the collection
                 }
                 catch
                 {
@@ -49,12 +52,12 @@ namespace SimpleQueue
             _queue = _database.GetCollection<MongoMessage<T>>(_queueName);
 
             // check if we already have a 'last read' position to start from
-            _position = _database.GetCollection("_queueIndex");
-            var last = _position.FindOneById(_queueName);
-            if (last != null)
-                _lastId = last["last"].AsObjectId;
+            //_position = _database.GetCollection("_queueIndex");
+            //var last = _position.FindOneById(_queueName);
+            //if (last != null)
+            //    _lastId = last["last"].AsObjectId;
 
-            _positionQuery = Query.EQ("_id", _queueName);
+            //_positionQuery = Query.EQ("_id", _queueName);
         }
 
         #region IPublish<T> Members
@@ -92,7 +95,7 @@ namespace SimpleQueue
                         // yes - record the current position and return it to the client
                         _startedReading = true;
                         _lastId = _enumerator.Current.Id;
-                        _position.Update(_positionQuery, Update.Set("last", _lastId), UpdateFlags.Upsert, SafeMode.False);
+                        //_position.Update(_positionQuery, Update.Set("last", _lastId), UpdateFlags.Upsert, SafeMode.False);
 
                         var message = _enumerator.Current.Message;
                         var delay = DateTime.UtcNow - _enumerator.Current.Enqueued;
@@ -133,9 +136,11 @@ namespace SimpleQueue
         private MongoCursorEnumerator<MongoMessage<T>> InitializeCursor()
         {
             Log.Debug(m => m("Initializing Cursor from {0}", _lastId));
-
+            IMongoQuery findFirstMessageQuery = (_lastId == ObjectId.Empty || _lastId==null) ?
+                Query.GT("Enqueued", _started) : // First run
+                Query.GT("_id", _lastId); // Rest of iterations
             var cursor = _queue
-                .Find(Query.GT("_id", _lastId))
+                .Find(findFirstMessageQuery)
                 .SetFlags(
                     QueryFlags.AwaitData |
                     QueryFlags.NoCursorTimeout |

@@ -16,7 +16,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{12462A
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-mongo-queue", "test-mongo-queue\test-mongo-queue.csproj", "{2DA4B957-C4B8-41FF-9570-214F0BA76EB6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{886BB0A1-73E8-4239-A584-60EF2E37DD3F}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+		mongo-queue.vsmdi = mongo-queue.vsmdi
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = mongo-queue.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -70,6 +82,16 @@ Global
 		{B2F1C92B-2302-4EBC-9222-D802F6CCC47B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B2F1C92B-2302-4EBC-9222-D802F6CCC47B}.Release|x86.ActiveCfg = Release|x86
 		{B2F1C92B-2302-4EBC-9222-D802F6CCC47B}.Release|x86.Build.0 = Release|x86
+		{2DA4B957-C4B8-41FF-9570-214F0BA76EB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DA4B957-C4B8-41FF-9570-214F0BA76EB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DA4B957-C4B8-41FF-9570-214F0BA76EB6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2DA4B957-C4B8-41FF-9570-214F0BA76EB6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2DA4B957-C4B8-41FF-9570-214F0BA76EB6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2DA4B957-C4B8-41FF-9570-214F0BA76EB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DA4B957-C4B8-41FF-9570-214F0BA76EB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DA4B957-C4B8-41FF-9570-214F0BA76EB6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2DA4B957-C4B8-41FF-9570-214F0BA76EB6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2DA4B957-C4B8-41FF-9570-214F0BA76EB6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
